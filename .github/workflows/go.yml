@@ -2,11 +2,8 @@ name: Build for ARM and x86
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - 'v*'  # Trigger workflow on tag pushes (e.g., v1.0.0)
 
 jobs:
   build:
@@ -34,11 +31,11 @@ jobs:
           mkdir -p dist
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o dist/wait-for-it-${{ matrix.goos }}-${{ matrix.goarch }}
 
-      # Upload the build artifacts
-      - name: Upload binaries
-        uses: actions/upload-artifact@v3
+      # Upload binaries as release assets
+      - name: Upload binaries to release
+        uses: actions/upload-release-asset@v1
         with:
-          name: wait-for-it-${{ matrix.goarch }}
-          path: dist/
-
-          
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/wait-for-it-${{ matrix.goos }}-${{ matrix.goarch }}
+          asset_name: wait-for-it-${{ matrix.goos }}-${{ matrix.goarch }}
+          asset_content_type: application/octet-stream
