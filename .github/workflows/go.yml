@@ -31,6 +31,18 @@ jobs:
           mkdir -p dist
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o dist/wait-for-it-${{ matrix.goos }}-${{ matrix.goarch }}
 
+      # Create a new GitHub release
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}  # Use the tag that triggered the workflow
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
       # Upload binaries as release assets
       - name: Upload binaries to release
         uses: actions/upload-release-asset@v1
