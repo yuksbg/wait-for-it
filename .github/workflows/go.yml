@@ -1,0 +1,44 @@
+name: Build for ARM and x86
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [amd64, arm64]  # Build for both x86 (amd64) and ARM (arm64)
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+
+      # Build the binaries for both architectures
+      - name: Build binaries
+        run: |
+          mkdir -p dist
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o dist/wait-for-it-${{ matrix.goos }}-${{ matrix.goarch }}
+
+      # Upload the build artifacts
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: wait-for-it-${{ matrix.goarch }}
+          path: dist/
+
+          
