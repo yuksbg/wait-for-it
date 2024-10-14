@@ -1,0 +1,37 @@
+Usage: wait-for-it [options] host1:port1,host2:port2,...
+
+Options:
+  -timeout TIMEOUT         Set timeout in seconds (default: 15)
+  -retry-interval SEC      Set retry interval in seconds (default: 1)
+  -quiet                   Enable quiet mode (suppress output)
+  -debug                   Enable debug mode (more detailed output)
+  -format FORMAT           Set log format (options: 'text' or 'json') (default: 'text')
+  -help                    Show this help message
+
+Environment Variables:
+  WAIT                     A comma-separated list of host:port pairs, e.g. "host1:port1,host2:port2".
+                           Can be used instead of passing host:port pairs as positional arguments.
+
+Description:
+  This tool checks the availability of multiple host:port pairs.
+  It will continuously check all given hosts/ports until they are all
+  available or the timeout is reached.
+
+Example Usage:
+  1. Check if multiple services are ready with a 30-second timeout:
+     ./wait-for-it -timeout 30 host1:8080,host2:9090
+
+  2. Use the WAIT environment variable for host:port pairs:
+     WAIT=host1:8080,host2:9090 ./wait-for-it -timeout 30
+
+  3. Check with a custom retry interval of 5 seconds between checks:
+     ./wait-for-it -timeout 30 -retry-interval 5 host1:8080,host2:9090
+
+  4. Enable debug mode to see detailed logs for each connection attempt:
+     ./wait-for-it -timeout 30 -debug host1:8080,host2:9090
+
+  5. Use quiet mode to suppress all output except warnings and errors:
+     ./wait-for-it -quiet -timeout 30 host1:8080,host2:9090
+
+  6. Output logs in JSON format:
+     ./wait-for-it -timeout 30 -format json host1:8080,host2:9090
